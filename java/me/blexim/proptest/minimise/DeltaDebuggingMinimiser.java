@@ -1,5 +1,6 @@
 package me.blexim.proptest.minimise;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import me.blexim.proptest.common.Input;
 import me.blexim.proptest.common.InputSequence;
@@ -22,6 +23,7 @@ public class DeltaDebuggingMinimiser<I extends Input> implements TestMinimiser<I
   }
 
   public InputSequence<I> minimise(InputSequence<I> inputs) {
+    Preconditions.checkArgument(testOracle.runTest(inputs) == TestOracle.Result.FAIL);
     InputSequence<I> ret = inputs;
     int n = 2;
 
