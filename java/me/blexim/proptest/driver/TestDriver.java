@@ -56,6 +56,8 @@ public class TestDriver<I extends Input> {
   private Optional<InputSequence<I>> findBadInput(int numIterations) {
     for (int i = 0; i < numIterations; i++) {
       InputSequence<I> inputs = generateInputs();
+      logger.info("Testing {}", inputs);
+
       if (testOracle.runTest(inputs) == TestOracle.Result.FAIL) {
         return Optional.of(inputs);
       }

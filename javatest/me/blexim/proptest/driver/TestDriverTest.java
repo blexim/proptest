@@ -15,11 +15,16 @@ public class TestDriverTest {
   private enum I implements Input {
     A,
     B,
-    C
+    C,
+    D,
+    E,
+    F,
+    G,
+    H
   }
 
   private static final long INITIAL_SEED = 420;
-  private static final int NUM_ITERS = 500;
+  private static final int NUM_ITERS = 10;
 
   @Test
   public void testSimpleSearch() {
@@ -30,7 +35,7 @@ public class TestDriverTest {
 
   @Test
   public void testPairMinimises() {
-    Optional<InputSequence<I>> bad = search(this::containsABeforeB, 10);
+    Optional<InputSequence<I>> bad = search(this::containsABeforeB, 5);
     assertThat(bad)
         .isEqualTo(Optional.of(InputSequence.create(I.A, I.B)));
   }
@@ -78,17 +83,8 @@ public class TestDriverTest {
 
     @Override
     public I next() {
-      switch (rand.nextInt(3)) {
-        case 0:
-          return I.A;
-        case 1:
-          return I.B;
-        case 2:
-          return I.C;
-        default:
-          // NOTREACHED
-          return null;
-      }
+      int idx = rand.nextInt(I.values().length);
+      return I.values()[idx];
     }
   }
 }
