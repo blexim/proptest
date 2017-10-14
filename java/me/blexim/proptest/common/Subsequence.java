@@ -1,32 +1,28 @@
 package me.blexim.proptest.common;
 
+import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
-public class Subsequence {
-  private final ImmutableSet<Integer> idxes;
+import java.util.Arrays;
 
-  private Subsequence(ImmutableSet<Integer> idxes) {
-    this.idxes = idxes;
+@AutoValue
+public abstract class Subsequence {
+  public abstract ImmutableSet<Integer> idxes();
+
+  public static Subsequence create(ImmutableSet<Integer> idxes) {
+    return new AutoValue_Subsequence(idxes);
   }
 
   public static Subsequence create(Iterable<Integer> idxes) {
-    return new Subsequence(ImmutableSet.copyOf(idxes));
+    return new AutoValue_Subsequence(ImmutableSet.copyOf(idxes));
   }
 
-  public static Subsequence create(ImmutableSet<Integer> idxes) {
-    return new Subsequence(idxes);
-  }
-
-  public static Subsequence empty() {
-    return new Subsequence(ImmutableSet.of());
+  public static Subsequence create(Integer... idxes) {
+    return create(Arrays.asList(idxes));
   }
 
   public Subsequence union(Subsequence that) {
-    return create(Sets.union(this.idxes, that.idxes));
-  }
-
-  ImmutableSet<Integer> getIdxes() {
-    return idxes;
+    return create(Sets.union(this.idxes(), that.idxes()));
   }
 }

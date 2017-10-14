@@ -17,7 +17,7 @@ public class DeltaDebuggingMinimiserTest {
   @Test
   public void testSimpleMinimises() {
     InputSequence<I> minimised = minimise(this::containsA, I.A, I.B, I.B, I.A);
-    assertThat(minimised.getInputs()).containsExactly(I.A);
+    assertThat(minimised.inputs()).containsExactly(I.A);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -29,11 +29,11 @@ public class DeltaDebuggingMinimiserTest {
   public void testPairMinimises() {
     InputSequence<I> minimised = minimise(this::containsABeforeB,
         I.B, I.A, I.A, I.C, I.B, I.B, I.A);
-    assertThat(minimised.getInputs()).containsExactly(I.A, I.B);
+    assertThat(minimised.inputs()).containsExactly(I.A, I.B);
   }
 
   private TestOracle.Result containsA(InputSequence<I> inputs) {
-    if (inputs.getInputs().contains(I.A)) {
+    if (inputs.inputs().contains(I.A)) {
       return TestOracle.Result.FAIL;
     } else {
       return TestOracle.Result.PASS;
@@ -43,7 +43,7 @@ public class DeltaDebuggingMinimiserTest {
   private TestOracle.Result containsABeforeB(InputSequence<I> inputs) {
     boolean sawA = false;
 
-    for (I input : inputs.getInputs()) {
+    for (I input : inputs.inputs()) {
       if (input == I.A) {
         sawA = true;
       } else if (input == I.B && sawA) {

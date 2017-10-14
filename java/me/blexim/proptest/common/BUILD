@@ -3,6 +3,7 @@ java_library(
     visibility = ["//visibility:public"],
     srcs = glob(["*.java"]),
     deps = [
+      "//third_party/auto_value",
       "@guava//jar",
     ],
 )

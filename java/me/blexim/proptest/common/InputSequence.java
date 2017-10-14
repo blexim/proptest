@@ -1,5 +1,6 @@
 package me.blexim.proptest.common;
 
+import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
@@ -7,36 +8,29 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public class InputSequence<I> {
-  private final ImmutableList<I> inputs;
-
-  private InputSequence(ImmutableList<I> inputs) {
-    this.inputs = inputs;
-  }
+@AutoValue
+public abstract class InputSequence<I> {
+  public abstract ImmutableList<I> inputs();
 
   public static <I> InputSequence<I> create(ImmutableList<I> inputs) {
-    return new InputSequence<>(inputs);
+    return new AutoValue_InputSequence<>(inputs);
   }
 
   public static <I> InputSequence<I> create(Iterable<I> inputs) {
-    return new InputSequence<>(ImmutableList.copyOf(inputs));
+    return new AutoValue_InputSequence<>(ImmutableList.copyOf(inputs));
   }
 
   public static <I> InputSequence<I> create(I... inputs) {
-    return new InputSequence<>(ImmutableList.copyOf(Arrays.asList(inputs)));
-  }
-
-  public ImmutableList<I> getInputs() {
-    return inputs;
+    return new AutoValue_InputSequence<>(ImmutableList.copyOf(Arrays.asList(inputs)));
   }
 
   public int size() {
-    return inputs.size();
+    return inputs().size();
   }
 
   public ImmutableList<Subsequence> split(int numPartitions) {
-    int itemsPerSet = (inputs.size() + numPartitions - 1) / numPartitions;
-    List<List<Integer>> partitions = Lists.partition(IntStream.range(0, inputs.size())
+    int itemsPerSet = (size() + numPartitions - 1) / numPartitions;
+    List<List<Integer>> partitions = Lists.partition(IntStream.range(0, size())
             .mapToObj(Integer::valueOf)
             .collect(ImmutableList.toImmutableList()),
         itemsPerSet);
@@ -48,9 +42,9 @@ public class InputSequence<I> {
   public InputSequence<I> minus(Subsequence subsequence) {
     ImmutableList.Builder<I> builder = ImmutableList.builder();
 
-    for (int i = 0; i < inputs.size(); i++) {
-      if (!subsequence.getIdxes().contains(i)) {
-        builder.add(inputs.get(i));
+    for (int i = 0; i < size(); i++) {
+      if (!subsequence.idxes().contains(i)) {
+        builder.add(inputs().get(i));
       }
     }
 

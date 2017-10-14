@@ -47,7 +47,7 @@ public class DeltaDebuggingMinimiser<I extends Input> implements TestMinimiser<I
 
   private InputSequence<I> splitAndSubtract(InputSequence<I> inputs, int numPartitions) {
     ImmutableList<Subsequence> partitions = inputs.split(numPartitions);
-    Subsequence dropped = Subsequence.empty();
+    Subsequence dropped = Subsequence.create();
 
     for (Subsequence partition : partitions) {
       Subsequence candidateDropped = dropped.union(partition);

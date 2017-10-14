@@ -2,6 +2,7 @@ licenses(["unencumbered"])
 
 java_library(
   name = "auto_value",
+  visibility = ["//visibility:public"],
   exported_plugins = [
     ":auto_value_plugin",
   ],
