@@ -8,7 +8,7 @@ import org.junit.Test;
 import static com.google.common.truth.Truth.assertThat;
 
 public class DeltaDebuggingMinimiserTest {
-  private static enum I implements Input {
+  private enum I implements Input {
     A,
     B,
     C
