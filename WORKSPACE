@@ -33,3 +33,8 @@ maven_jar(
   name = "truth_java8",
   artifact = "com.google.truth.extensions:truth-java8-extension:0.36",
 )
+
+maven_jar(
+  name = "hamcrest_all",
+  artifact = "org.hamcrest:hamcrest-all:1.3",
+)

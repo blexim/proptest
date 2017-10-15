@@ -6,6 +6,7 @@ java_library(
     licenses = ["permissive"],
     exports = [
         "@guava_testlib//jar",
+        "@hamcrest_all//jar",
         "@junit//jar",
         "@truth//jar",
         "@truth_java8//jar",

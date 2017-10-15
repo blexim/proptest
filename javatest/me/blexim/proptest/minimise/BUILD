@@ -2,7 +2,6 @@ java_test(
     name = "test",
     visibility = ["//visibility:public"],
     srcs = glob(["*.java"]),
-    test_class = "me.blexim.proptest.minimise.DeltaDebuggingMinimiserTest",
     size = "small",
     deps = [
       "//java/me/blexim/proptest/common",
