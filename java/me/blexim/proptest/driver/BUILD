@@ -6,7 +6,6 @@ java_library(
       "//java/me/blexim/proptest/common",
       "//java/me/blexim/proptest/minimise",
       "//third_party/slf4j",
-      "@auto_value//jar",
       "@guava//jar",
     ],
 )
