@@ -6,8 +6,8 @@ java_test(
     deps = [
       "//java/me/blexim/proptest/common",
       "//java/me/blexim/proptest/minimise",
+      "//third_party/guava",
       "//third_party/slf4j",
       "//third_party/testing",
-      "@guava//jar",
     ],
 )

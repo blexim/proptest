@@ -4,6 +4,6 @@ java_library(
     srcs = glob(["*.java"]),
     deps = [
       "//third_party/auto_value",
-      "@guava//jar",
+      "//third_party/guava",
     ],
 )

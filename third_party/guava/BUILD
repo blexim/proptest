@@ -1,8 +1,9 @@
 licenses(["unencumbered"])
 
-java_library(name = "slf4j",
+java_library(
+  name = "guava",
   visibility = ["//visibility:public"],
   exports = [
-    "@slf4j_api_artifact//jar",
+    "@guava_artifact//jar",
   ],
 )

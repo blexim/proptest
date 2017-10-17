@@ -5,10 +5,10 @@ java_library(
     testonly = 1,
     licenses = ["permissive"],
     exports = [
-        "@guava_testlib//jar",
-        "@hamcrest_all//jar",
-        "@junit//jar",
-        "@truth//jar",
-        "@truth_java8//jar",
+        "@guava_testlib_artifact//jar",
+        "@hamcrest_all_artifact//jar",
+        "@junit_artifact//jar",
+        "@truth_artifact//jar",
+        "@truth_java8_artifact//jar",
     ],
 )
