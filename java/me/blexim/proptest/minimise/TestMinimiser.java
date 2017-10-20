@@ -1,8 +1,7 @@
 package me.blexim.proptest.minimise;
 
-import me.blexim.proptest.common.Input;
-import me.blexim.proptest.common.InputSequence;
+import com.google.common.collect.ImmutableList;
 
-public interface TestMinimiser<I extends Input> {
-  InputSequence<I> minimise(InputSequence<I> inputs);
+public interface TestMinimiser<I> {
+  ImmutableList<I> minimise(Iterable<I> inputs);
 }

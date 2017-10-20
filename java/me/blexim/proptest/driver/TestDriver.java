@@ -1,20 +1,17 @@
 package me.blexim.proptest.driver;
 
 import com.google.common.collect.ImmutableList;
-import me.blexim.proptest.common.Input;
+import java.util.Optional;
+import java.util.Random;
 import me.blexim.proptest.common.InputGenerator;
 import me.blexim.proptest.common.InputGeneratorFactory;
-import me.blexim.proptest.common.InputSequence;
 import me.blexim.proptest.common.TestOracle;
 import me.blexim.proptest.minimise.DeltaDebuggingMinimiser;
 import me.blexim.proptest.minimise.TestMinimiser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Optional;
-import java.util.Random;
-
-public class TestDriver<I extends Input> {
+public class TestDriver<I> {
   private static final Logger logger = LoggerFactory.getLogger(TestDriver.class);
 
   private final InputGeneratorFactory<I> inputGeneratorFactory;
@@ -34,28 +31,28 @@ public class TestDriver<I extends Input> {
     this.seed = initialSeed;
   }
 
-  public static <I extends Input> TestDriver<I> create(
+  public static <I> TestDriver<I> create(
       InputGeneratorFactory<I> inputGeneratorFactory, TestOracle<I> testOracle,
       int seqLenth, long initialSeed) {
     return new TestDriver<>(inputGeneratorFactory, testOracle, seqLenth,
         DeltaDebuggingMinimiser.create(testOracle), initialSeed);
   }
 
-  public static <I extends Input> TestDriver<I> create(
+  public static <I> TestDriver<I> create(
       InputGeneratorFactory<I> inputGeneratorFactory, TestOracle<I> testOracle,
       int seqLenth) {
     return new TestDriver<>(inputGeneratorFactory, testOracle, seqLenth,
         DeltaDebuggingMinimiser.create(testOracle), new Random().nextLong());
   }
 
-  public Optional<InputSequence<I>> search(int numIterations) {
+  public Optional<ImmutableList<I>> search(int numIterations) {
     return findBadInput(numIterations)
         .map(minimiser::minimise);
   }
 
-  private Optional<InputSequence<I>> findBadInput(int numIterations) {
+  private Optional<ImmutableList<I>> findBadInput(int numIterations) {
     for (int i = 0; i < numIterations; i++) {
-      InputSequence<I> inputs = generateInputs();
+      ImmutableList<I> inputs = generateInputs();
       logger.info("Testing {}", inputs);
 
       if (testOracle.runTest(inputs) == TestOracle.Result.FAIL) {
@@ -66,15 +63,16 @@ public class TestDriver<I extends Input> {
     return Optional.empty();
   }
 
-  private InputSequence<I> generateInputs() {
+  private ImmutableList<I> generateInputs() {
     ImmutableList.Builder<I> builder = ImmutableList.builder();
-    InputGenerator<I> generator = inputGeneratorFactory.create(seed);
+    Random rand = new Random(seed);
+    InputGenerator<I> generator = inputGeneratorFactory.create(rand);
     seed++;
 
     for (int i = 0; i < seqLenth; i++) {
       builder.add(generator.next());
     }
 
-    return InputSequence.create(builder.build());
+    return builder.build();
   }
 }

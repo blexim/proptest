@@ -1,18 +1,17 @@
 package me.blexim.proptest.driver;
 
-import me.blexim.proptest.common.Input;
-import me.blexim.proptest.common.InputGenerator;
-import me.blexim.proptest.common.InputSequence;
-import me.blexim.proptest.common.TestOracle;
-import org.junit.Test;
-
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import java.util.Optional;
 import java.util.Random;
+import me.blexim.proptest.common.InputGenerator;
+import me.blexim.proptest.common.TestOracle;
+import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;
 
 public class TestDriverTest {
-  private enum I implements Input {
+  private enum I {
     A,
     B,
     C,
@@ -28,37 +27,37 @@ public class TestDriverTest {
 
   @Test
   public void testSimpleSearch() {
-    Optional<InputSequence<I>> bad = search(this::containsA, 10);
+    Optional<ImmutableList<I>> bad = search(this::containsA, 10);
     assertThat(bad)
-        .isEqualTo(Optional.of(InputSequence.create(I.A)));
+        .isEqualTo(Optional.of(ImmutableList.of(I.A)));
   }
 
   @Test
   public void testPairMinimises() {
-    Optional<InputSequence<I>> bad = search(this::containsABeforeB, 5);
+    Optional<ImmutableList<I>> bad = search(this::containsABeforeB, 5);
     assertThat(bad)
-        .isEqualTo(Optional.of(InputSequence.create(I.A, I.B)));
+        .isEqualTo(Optional.of(ImmutableList.of(I.A, I.B)));
   }
 
   @Test
   public void testImpossibleSpecFails() {
-    Optional<InputSequence<I>> bad = search(this::containsABeforeB, 1);
+    Optional<ImmutableList<I>> bad = search(this::containsABeforeB, 1);
     assertThat(bad)
         .isEqualTo(Optional.empty());
   }
 
-  private TestOracle.Result containsA(InputSequence<I> inputs) {
-    if (inputs.inputs().contains(I.A)) {
+  private TestOracle.Result containsA(Iterable<I> inputs) {
+    if (Iterables.contains(inputs, I.A)) {
       return TestOracle.Result.FAIL;
     } else {
       return TestOracle.Result.PASS;
     }
   }
 
-  private TestOracle.Result containsABeforeB(InputSequence<I> inputs) {
+  private TestOracle.Result containsABeforeB(Iterable<I> inputs) {
     boolean sawA = false;
 
-    for (I input : inputs.inputs()) {
+    for (I input : inputs) {
       if (input == I.A) {
         sawA = true;
       } else if (input == I.B && sawA) {
@@ -69,7 +68,7 @@ public class TestDriverTest {
     return TestOracle.Result.PASS;
   }
 
-  private Optional<InputSequence<I>> search(TestOracle<I> oracle, int seqLength) {
+  private Optional<ImmutableList<I>> search(TestOracle<I> oracle, int seqLength) {
     TestDriver<I> driver = TestDriver.create(IGenerator::new, oracle, seqLength, INITIAL_SEED);
     return driver.search(NUM_ITERS);
   }
@@ -77,8 +76,8 @@ public class TestDriverTest {
   private static class IGenerator implements InputGenerator<I> {
     private final Random rand;
 
-    private IGenerator(long seed) {
-      this.rand = new Random(seed);
+    private IGenerator(Random rand) {
+      this.rand = rand;
     }
 
     @Override
