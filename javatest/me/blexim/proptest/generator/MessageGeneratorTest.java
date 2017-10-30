@@ -17,6 +17,7 @@ public class MessageGeneratorTest {
 
   @Test
   public void testRandFoo() {
-    System.out.println(generator.next(rand).toString());
+    System.out.println("Running....");
+    System.out.printf("Generated %s\n", generator.next(rand).toString());
   }
 }

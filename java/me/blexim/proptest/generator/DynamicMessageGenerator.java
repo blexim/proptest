@@ -26,14 +26,17 @@ class DynamicMessageGenerator implements Generator<DynamicMessage> {
     DynamicMessage.Builder builder = DynamicMessage.newBuilder(descriptor);
 
     for (FieldDescriptor fieldDescriptor : descriptor.getFields()) {
-      if (fieldDescriptor.getContainingOneof() != null) {
+      System.out.printf("Field: %s\n", fieldDescriptor.getFullName());
+      if (fieldDescriptor.getContainingOneof() == null) {
         if (fieldDescriptor.isRepeated()) {
           int reps = nextRepsCount(rand);
           for (int i = 0; i < reps; i++) {
             builder.addRepeatedField(fieldDescriptor, nextField(fieldDescriptor, rand));
           }
         } else {
-          builder.setField(fieldDescriptor, nextField(fieldDescriptor, rand));
+          Object value = nextField(fieldDescriptor, rand);
+          System.out.printf("Setting %s to %s\n", fieldDescriptor.getFullName(), value);
+          builder.setField(fieldDescriptor, value);
         }
       }
     }
@@ -71,6 +74,8 @@ class DynamicMessageGenerator implements Generator<DynamicMessage> {
         return protobufGenerator.nextProto(messageType, rand);
       case ENUM:
         return pick(fieldDescriptor.getEnumType().getValues(), rand);
+      case STRING:
+        return randString(rand.nextInt(5), rand);
       default:
         return null;
     }
@@ -79,5 +84,17 @@ class DynamicMessageGenerator implements Generator<DynamicMessage> {
   private static <V> V pick(List<V> values, Random rand) {
     int idx = rand.nextInt(values.size());
     return values.get(idx);
+  }
+
+  private static final String CHARS = "abcdefgABCDEFG '#0123459";
+
+  private static String randString(int len, Random rand) {
+    StringBuilder builder = new StringBuilder(len);
+
+    for (int i = 0; i < len; i++) {
+      builder.append(CHARS.charAt(rand.nextInt(CHARS.length())));
+    }
+
+    return builder.toString();
   }
 }

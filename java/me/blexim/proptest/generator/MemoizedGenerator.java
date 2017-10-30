@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 class MemoizedGenerator<T> implements Generator<T> {
-  private static final double REUSE_PROB = 0.3;
+  private static final double REUSE_PROB = 0.1;
 
   private final Generator<T> generator;
   private final ArrayList<T> memoTable;
@@ -15,12 +15,13 @@ class MemoizedGenerator<T> implements Generator<T> {
   }
 
   static <T> MemoizedGenerator<T> create(Generator<T> generator) {
-    return new MemoizedGenerator<T>(generator);
+    return new MemoizedGenerator<>(generator);
   }
 
   @Override
   public T next(Random rand) {
     if (!memoTable.isEmpty() && rand.nextDouble() <= REUSE_PROB) {
+      System.out.println("Returning memo...");
       return randomMemo(rand);
     } else {
       T ret = generator.next(rand);

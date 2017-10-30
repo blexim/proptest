@@ -5,7 +5,7 @@ package me.blexim.proptest.test;
 option java_outer_classname = "TestProtos";
 
 message Foo {
-    uint32 a = 1;
+    uint64 a = 1;
     oneof b {
         string s = 2;
         Bar bar = 3;
@@ -13,6 +13,6 @@ message Foo {
 }
 
 message Bar {
-    uint32 x = 1;
+    uint64 x = 1;
     double y = 2;
 }
