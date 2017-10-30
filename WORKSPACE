@@ -25,6 +25,16 @@ maven_jar(
 )
 
 maven_jar(
+  name = "protobuf_java_artifact",
+  artifact = "com.google.protobuf:protobuf-java:3.4.0",
+)
+
+maven_jar(
+  name = "protobuf_java_util_artifact",
+  artifact = "com.google.protobuf:protobuf-java-util:3.4.0",
+)
+
+maven_jar(
   name = "truth_artifact",
   artifact = "com.google.truth:truth:0.36",
 )
@@ -37,4 +47,11 @@ maven_jar(
 maven_jar(
   name = "hamcrest_all_artifact",
   artifact = "org.hamcrest:hamcrest-all:1.3",
+)
+
+http_archive(
+    name = "com_google_protobuf_java",
+    urls = ["https://github.com/google/protobuf/archive/b4b0e304be5a68de3d0ee1af9b286f958750f5e4.zip"],
+    strip_prefix = "protobuf-b4b0e304be5a68de3d0ee1af9b286f958750f5e4",
+    sha256 = "ff771a662fb6bd4d3cc209bcccedef3e93980a49f71df1e987f6afa3bcdcba3a",
 )
