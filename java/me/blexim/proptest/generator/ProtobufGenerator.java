@@ -12,8 +12,24 @@ public class ProtobufGenerator {
 
   private ProtobufGenerator() {
     this.messageGenerators = new HashMap<>();
-    this.longGenerator = MemoizedGenerator.create(ProtobufGenerator::nextLong);
-    this.doubleGenerator = MemoizedGenerator.create(ProtobufGenerator::nextDouble);
+    this.longGenerator = MemoizedGenerator.create(Random::nextLong);
+    this.doubleGenerator = MemoizedGenerator.create(Random::nextDouble);
+  }
+
+  static ProtobufGenerator create() {
+    return new ProtobufGenerator();
+  }
+
+  long nextLong(Random rand) {
+    return longGenerator.next(rand);
+  }
+
+  double nextDouble(Random rand) {
+    return doubleGenerator.next(rand);
+  }
+
+  DynamicMessage nextProto(Descriptor descriptor, Random rand) {
+    return messageGenerator(descriptor).next(rand);
   }
 
   private Generator<DynamicMessage> messageGenerator(Descriptor descriptor) {
@@ -22,13 +38,5 @@ public class ProtobufGenerator {
 
   private Generator<DynamicMessage> createMessageGenerator(Descriptor descriptor) {
     return MemoizedGenerator.create(DynamicMessageGenerator.create(descriptor, this));
-  }
-
-  private static long nextLong(Random rand) {
-    return rand.nextLong();
-  }
-
-  private static double nextDouble(Random rand) {
-    return rand.nextDouble();
   }
 }
