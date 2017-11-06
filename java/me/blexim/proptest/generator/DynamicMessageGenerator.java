@@ -1,5 +1,6 @@
 package me.blexim.proptest.generator;
 
+import com.google.protobuf.ByteString;
 import com.google.protobuf.Descriptors.Descriptor;
 import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.Descriptors.OneofDescriptor;
@@ -26,7 +27,6 @@ class DynamicMessageGenerator implements Generator<DynamicMessage> {
     DynamicMessage.Builder builder = DynamicMessage.newBuilder(descriptor);
 
     for (FieldDescriptor fieldDescriptor : descriptor.getFields()) {
-      System.out.printf("Field: %s\n", fieldDescriptor.getFullName());
       if (fieldDescriptor.getContainingOneof() == null) {
         if (fieldDescriptor.isRepeated()) {
           int reps = nextRepsCount(rand);
@@ -35,7 +35,6 @@ class DynamicMessageGenerator implements Generator<DynamicMessage> {
           }
         } else {
           Object value = nextField(fieldDescriptor, rand);
-          System.out.printf("Setting %s to %s\n", fieldDescriptor.getFullName(), value);
           builder.setField(fieldDescriptor, value);
         }
       }
@@ -57,18 +56,20 @@ class DynamicMessageGenerator implements Generator<DynamicMessage> {
     switch (fieldDescriptor.getType()) {
       case INT32:
       case UINT32:
+      case SINT32:
+      case FIXED32:
+      case SFIXED32:
+        return (int) protobufGenerator.nextLong(rand);
       case INT64:
       case UINT64:
-      case SINT32:
       case SINT64:
-      case FIXED32:
       case FIXED64:
-      case SFIXED32:
       case SFIXED64:
         return protobufGenerator.nextLong(rand);
       case DOUBLE:
-      case FLOAT:
         return protobufGenerator.nextDouble(rand);
+      case FLOAT:
+        return (float) protobufGenerator.nextDouble(rand);
       case MESSAGE:
         Descriptor messageType = fieldDescriptor.getMessageType();
         return protobufGenerator.nextProto(messageType, rand);
@@ -76,6 +77,8 @@ class DynamicMessageGenerator implements Generator<DynamicMessage> {
         return pick(fieldDescriptor.getEnumType().getValues(), rand);
       case STRING:
         return randString(rand.nextInt(5), rand);
+      case BYTES:
+        return ByteString.copyFromUtf8(randString(rand.nextInt(5), rand));
       default:
         return null;
     }

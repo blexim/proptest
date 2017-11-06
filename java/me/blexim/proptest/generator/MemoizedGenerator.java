@@ -21,7 +21,6 @@ class MemoizedGenerator<T> implements Generator<T> {
   @Override
   public T next(Random rand) {
     if (!memoTable.isEmpty() && rand.nextDouble() <= REUSE_PROB) {
-      System.out.println("Returning memo...");
       return randomMemo(rand);
     } else {
       T ret = generator.next(rand);

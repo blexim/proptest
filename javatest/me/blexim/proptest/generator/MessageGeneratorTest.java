@@ -5,6 +5,8 @@ import me.blexim.proptest.test.TestProtos.Foo;
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.google.common.truth.Truth.assertThat;
+
 public class MessageGeneratorTest {
   private MessageGenerator<Foo> generator;
   private Random rand;
@@ -17,7 +19,7 @@ public class MessageGeneratorTest {
 
   @Test
   public void testRandFoo() {
-    System.out.println("Running....");
-    System.out.printf("Generated %s\n", generator.next(rand).toString());
+    Foo f = generator.next(rand);
+    assertThat(f).isNotEqualTo(Foo.getDefaultInstance());
   }
 }
