@@ -49,6 +49,11 @@ maven_jar(
   artifact = "org.hamcrest:hamcrest-all:1.3",
 )
 
+maven_jar(
+  name = "gson_artifact",
+  artifact = "com.google.code.gson:gson:2.8.2",
+)
+
 http_archive(
     name = "com_google_protobuf",
     urls = ["https://github.com/google/protobuf/archive/b4b0e304be5a68de3d0ee1af9b286f958750f5e4.zip"],

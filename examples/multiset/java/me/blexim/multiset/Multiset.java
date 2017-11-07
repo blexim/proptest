@@ -1,7 +1,5 @@
 package me.blexim.multiset;
 
-import me.blexim.multiset.MultisetProtos;
-
 import java.util.HashSet;
 
 public class Multiset {
@@ -24,8 +22,9 @@ public class Multiset {
   }
 
   public void remove(int x) {
-    set.remove(x);
-    size--;
+    if (set.remove(x)) {
+      size--;
+    }
   }
 
   public void process(MultisetProtos.Op op) {

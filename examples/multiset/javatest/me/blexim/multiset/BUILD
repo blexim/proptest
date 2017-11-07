@@ -12,6 +12,7 @@ java_test(
         "//java/me/blexim/proptest/generator",
         "//java/me/blexim/proptest/minimise",
         "//third_party/guava",
+        "//third_party/protobuf",
         "//third_party/slf4j",
         "//third_party/testing",
     ],
