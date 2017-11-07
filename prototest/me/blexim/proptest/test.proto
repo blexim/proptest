@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package me.blexim.proptest.test;
+
+option java_outer_classname = "TestProtos";
+
+message Foo {
+    uint64 ul = 1;
+    int64 l = 2;
+    sint64 sl = 3;
+
+    uint32 ui = 4;
+    int32 i = 5;
+    sint32 si = 6;
+
+    double d = 7;
+    float f = 8;
+
+    string s = 9;
+    bytes bs = 10;
+
+    enum E {
+        A = 0;
+        B = 1;
+        C = 3;
+    }
+
+    E e = 11;
+
+    Bar bar = 12;
+
+    oneof O {
+        Foo foo = 13;
+        uint32 x = 14;
+    }
+}
+
+message Bar {
+    uint32 x = 1;
+    double y = 2;
+}

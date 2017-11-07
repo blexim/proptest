@@ -1,14 +1,15 @@
 package me.blexim.proptest.minimise;
 
-import me.blexim.proptest.common.Input;
-import me.blexim.proptest.common.InputSequence;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import java.util.Arrays;
 import me.blexim.proptest.common.TestOracle;
 import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;
 
 public class DeltaDebuggingMinimiserTest {
-  private enum I implements Input {
+  private enum I {
     A,
     B,
     C
@@ -16,8 +17,8 @@ public class DeltaDebuggingMinimiserTest {
 
   @Test
   public void testSimpleMinimises() {
-    InputSequence<I> minimised = minimise(this::containsA, I.A, I.B, I.B, I.A);
-    assertThat(minimised.inputs()).containsExactly(I.A);
+    ImmutableList<I> minimised = minimise(this::containsA, I.A, I.B, I.B, I.A);
+    assertThat(minimised).containsExactly(I.A);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -27,23 +28,23 @@ public class DeltaDebuggingMinimiserTest {
 
   @Test
   public void testPairMinimises() {
-    InputSequence<I> minimised = minimise(this::containsABeforeB,
+    ImmutableList<I> minimised = minimise(this::containsABeforeB,
         I.B, I.A, I.A, I.C, I.B, I.B, I.A);
-    assertThat(minimised.inputs()).containsExactly(I.A, I.B);
+    assertThat(minimised).containsExactly(I.A, I.B);
   }
 
-  private TestOracle.Result containsA(InputSequence<I> inputs) {
-    if (inputs.inputs().contains(I.A)) {
+  private TestOracle.Result containsA(Iterable<I> inputs) {
+    if (Iterables.contains(inputs, I.A)) {
       return TestOracle.Result.FAIL;
     } else {
       return TestOracle.Result.PASS;
     }
   }
 
-  private TestOracle.Result containsABeforeB(InputSequence<I> inputs) {
+  private TestOracle.Result containsABeforeB(Iterable<I> inputs) {
     boolean sawA = false;
 
-    for (I input : inputs.inputs()) {
+    for (I input : inputs) {
       if (input == I.A) {
         sawA = true;
       } else if (input == I.B && sawA) {
@@ -54,9 +55,8 @@ public class DeltaDebuggingMinimiserTest {
     return TestOracle.Result.PASS;
   }
 
-  private InputSequence<I> minimise(TestOracle<I> oracle, I... inputs) {
+  private ImmutableList<I> minimise(TestOracle<I> oracle, I... inputs) {
     DeltaDebuggingMinimiser<I> minimiser = DeltaDebuggingMinimiser.create(oracle);
-    InputSequence<I> inputSequence = InputSequence.create(inputs);
-    return minimiser.minimise(inputSequence);
+    return minimiser.minimise(Arrays.asList(inputs));
   }
 }

@@ -2,15 +2,15 @@ package me.blexim.proptest.common;
 
 import java.util.function.Predicate;
 
-public interface TestOracle<I extends Input> {
+public interface TestOracle<I> {
   enum Result {
     PASS,
     FAIL
   }
 
-  Result runTest(InputSequence<I> inputs);
+  Result runTest(Iterable<I> inputs);
 
-  static <I extends Input> TestOracle<I> create(Predicate<InputSequence<I>> predicate) {
+  static <I> TestOracle<I> create(Predicate<Iterable<I>> predicate) {
     return inputs -> predicate.test(inputs) ? Result.PASS : Result.FAIL;
   }
 }

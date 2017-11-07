@@ -1,5 +1,7 @@
 package me.blexim.proptest.common;
 
-public interface InputGeneratorFactory<I extends Input> {
-  InputGenerator<I> create(long seed);
+import java.util.Random;
+
+public interface InputGeneratorFactory<I> {
+  InputGenerator<I> create(Random random);
 }

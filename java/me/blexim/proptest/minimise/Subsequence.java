@@ -1,4 +1,4 @@
-package me.blexim.proptest.common;
+package me.blexim.proptest.minimise;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 @AutoValue
 public abstract class Subsequence {
-  public abstract ImmutableSet<Integer> idxes();
+  abstract ImmutableSet<Integer> idxes();
 
   public static Subsequence create(ImmutableSet<Integer> idxes) {
     return new AutoValue_Subsequence(idxes);

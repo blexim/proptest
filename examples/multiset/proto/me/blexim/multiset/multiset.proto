@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package me.blexim.multiset;
+
+option java_outer_classname = "MultisetProtos";
+
+message Add {
+    uint32 key = 1;
+}
+
+message Remove {
+    uint32 key = 1;
+}
+
+message Op {
+    oneof op {
+        Add add = 1;
+        Remove remove = 2;
+    }
+}

@@ -1,4 +1,4 @@
-package me.blexim.proptest.common;
+package me.blexim.proptest.minimise;
 
 import org.junit.Test;
 

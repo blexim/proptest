@@ -1,4 +1,4 @@
-package me.blexim.proptest.common;
+package me.blexim.proptest.minimise;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;

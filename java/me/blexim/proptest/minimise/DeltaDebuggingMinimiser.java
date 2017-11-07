@@ -2,14 +2,11 @@ package me.blexim.proptest.minimise;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import me.blexim.proptest.common.Input;
-import me.blexim.proptest.common.InputSequence;
-import me.blexim.proptest.common.Subsequence;
 import me.blexim.proptest.common.TestOracle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DeltaDebuggingMinimiser<I extends Input> implements TestMinimiser<I> {
+public class DeltaDebuggingMinimiser<I> implements TestMinimiser<I> {
   private static final Logger logger = LoggerFactory.getLogger(DeltaDebuggingMinimiser.class);
 
   private final TestOracle<I> testOracle;
@@ -18,13 +15,13 @@ public class DeltaDebuggingMinimiser<I extends Input> implements TestMinimiser<I
     this.testOracle = testOracle;
   }
 
-  public static <I extends Input> DeltaDebuggingMinimiser<I> create(TestOracle<I> testOracle) {
+  public static <I> DeltaDebuggingMinimiser<I> create(TestOracle<I> testOracle) {
     return new DeltaDebuggingMinimiser<>(testOracle);
   }
 
-  public InputSequence<I> minimise(InputSequence<I> inputs) {
+  public ImmutableList<I> minimise(Iterable<I> inputs) {
     Preconditions.checkArgument(testOracle.runTest(inputs) == TestOracle.Result.FAIL);
-    InputSequence<I> ret = inputs;
+    InputSequence<I> ret = InputSequence.create(inputs);
     int n = 2;
 
     while (ret.size() > 1) {
@@ -42,7 +39,7 @@ public class DeltaDebuggingMinimiser<I extends Input> implements TestMinimiser<I
       }
     }
 
-    return ret;
+    return ret.inputs();
   }
 
   private InputSequence<I> splitAndSubtract(InputSequence<I> inputs, int numPartitions) {
@@ -53,7 +50,7 @@ public class DeltaDebuggingMinimiser<I extends Input> implements TestMinimiser<I
       Subsequence candidateDropped = dropped.union(partition);
       InputSequence<I> candidateInputs = inputs.minus(candidateDropped);
 
-      if (testOracle.runTest(candidateInputs) == TestOracle.Result.FAIL) {
+      if (testOracle.runTest(candidateInputs.inputs()) == TestOracle.Result.FAIL) {
         dropped = candidateDropped;
       }
     }
