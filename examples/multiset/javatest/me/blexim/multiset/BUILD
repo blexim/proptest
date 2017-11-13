@@ -2,10 +2,11 @@ java_test(
     name = "test",
     size = "small",
     srcs = glob(["*.java"]),
-    test_class = "me.blexim.multiset.MultisetTest",
+    test_class = "me.blexim.multiset.CountingSetTest",
     visibility = ["//visibility:public"],
     deps = [
         "//examples/multiset/java/me/blexim/multiset",
+        "//examples/multiset/java/me/blexim/multiset/testing",
         "//examples/multiset/proto/me/blexim/multiset:multiset_proto_java",
         "//java/me/blexim/proptest/common",
         "//java/me/blexim/proptest/driver",
