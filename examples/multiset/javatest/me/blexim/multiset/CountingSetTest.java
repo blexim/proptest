@@ -18,37 +18,35 @@ import java.util.function.Supplier;
 import static com.google.common.truth.Truth.assertThat;
 
 public class CountingSetTest {
-  private static final Logger logger = LoggerFactory.getLogger(TestDriver.class);
+  private static final Logger logger = LoggerFactory.getLogger(CountingSetTest.class);
 
   private static final int TEST_LENGTH = 50;
   private static final long SEED = 420L;
   private static final int ITERS = 5;
 
   @Test
-  public void v1SetHasBugs() throws Exception {
+  public void v1SetHasBugs() {
     assertThat(search(CountingSetV1::create))
         .isNotEqualTo(Optional.empty());
   }
 
   @Test
-  public void v2SetHasBugs() throws Exception {
+  public void v2SetHasBugs() {
     assertThat(search(CountingSetV2::create))
         .isNotEqualTo(Optional.empty());
   }
 
   @Test
-  public void v3SetIsCorrect() throws Exception {
+  public void v3SetIsCorrect() {
     assertThat(search(CountingSetV3::create))
         .isEqualTo(Optional.empty());
   }
 
-  private Optional<ImmutableList<MultisetProtos.Op>> search(Supplier<CountingSet> setSupplier)
-      throws Exception {
+  private Optional<ImmutableList<MultisetProtos.Op>> search(Supplier<CountingSet> setSupplier) {
     return newDriver(setSupplier).search(ITERS);
   }
 
-  private TestDriver<MultisetProtos.Op> newDriver(Supplier<CountingSet> setSupplier)
-      throws Exception {
+  private TestDriver<MultisetProtos.Op> newDriver(Supplier<CountingSet> setSupplier) {
     TestHarness harness = new TestHarness(setSupplier);
     return TestDriver.create(harness, harness, TEST_LENGTH, SEED);
   }
@@ -58,7 +56,7 @@ public class CountingSetTest {
     private final Supplier<CountingSet> factory;
     private final MessageGenerator<MultisetProtos.Op> generator;
 
-    private TestHarness(Supplier<CountingSet> factory) throws Exception {
+    private TestHarness(Supplier<CountingSet> factory) {
       this.factory = factory;
       this.generator = MessageGenerator.create(MultisetProtos.Op.class);
     }
@@ -76,7 +74,7 @@ public class CountingSetTest {
     }
 
     @Override
-    public InputGenerator<MultisetProtos.Op> create(Random random) {
+    public InputGenerator<MultisetProtos.Op> makeGenerator(Random random) {
       return () -> generator.next(random);
     }
   }

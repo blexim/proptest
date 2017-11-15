@@ -81,7 +81,7 @@ public class TestDriverTest {
     }
 
     @Override
-    public I next() {
+    public I nextInput() {
       int idx = rand.nextInt(I.values().length);
       return I.values()[idx];
     }

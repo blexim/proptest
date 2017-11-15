@@ -66,11 +66,11 @@ public class TestDriver<I> {
   private ImmutableList<I> generateInputs() {
     ImmutableList.Builder<I> builder = ImmutableList.builder();
     Random rand = new Random(seed);
-    InputGenerator<I> generator = inputGeneratorFactory.create(rand);
+    InputGenerator<I> generator = inputGeneratorFactory.makeGenerator(rand);
     seed++;
 
     for (int i = 0; i < seqLenth; i++) {
-      builder.add(generator.next());
+      builder.add(generator.nextInput());
     }
 
     return builder.build();
