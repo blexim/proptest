@@ -9,26 +9,26 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 @AutoValue
-public abstract class InputSequence<I> {
-  public abstract ImmutableList<I> inputs();
+abstract class InputSequence<I> {
+  abstract ImmutableList<I> inputs();
 
-  public static <I> InputSequence<I> create(ImmutableList<I> inputs) {
+  static <I> InputSequence<I> create(ImmutableList<I> inputs) {
     return new AutoValue_InputSequence<>(inputs);
   }
 
-  public static <I> InputSequence<I> create(Iterable<I> inputs) {
+  static <I> InputSequence<I> create(Iterable<I> inputs) {
     return new AutoValue_InputSequence<>(ImmutableList.copyOf(inputs));
   }
 
-  public static <I> InputSequence<I> create(I... inputs) {
+  static <I> InputSequence<I> create(I... inputs) {
     return new AutoValue_InputSequence<>(ImmutableList.copyOf(Arrays.asList(inputs)));
   }
 
-  public int size() {
+  int size() {
     return inputs().size();
   }
 
-  public ImmutableList<Subsequence> split(int numPartitions) {
+  ImmutableList<Subsequence> split(int numPartitions) {
     int itemsPerSet = (size() + numPartitions - 1) / numPartitions;
     List<List<Integer>> partitions = Lists.partition(IntStream.range(0, size())
             .mapToObj(Integer::valueOf)
@@ -39,7 +39,7 @@ public abstract class InputSequence<I> {
         .collect(ImmutableList.toImmutableList());
   }
 
-  public InputSequence<I> minus(Subsequence subsequence) {
+  InputSequence<I> minus(Subsequence subsequence) {
     ImmutableList.Builder<I> builder = ImmutableList.builder();
 
     for (int i = 0; i < size(); i++) {
