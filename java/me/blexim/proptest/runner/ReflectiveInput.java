@@ -6,7 +6,7 @@ import com.google.common.collect.ImmutableList;
 import java.lang.reflect.Method;
 
 @AutoValue
-abstract class ReflectiveInput {
+public abstract class ReflectiveInput {
   abstract Method method();
   abstract ImmutableList<Object> args();
 

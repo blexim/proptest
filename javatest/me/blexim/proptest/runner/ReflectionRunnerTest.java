@@ -18,25 +18,12 @@ public class ReflectionRunnerTest {
 
   @Before
   public void setUp() {
-    driver = TestDriver.create(ReflectionRunnerTest::newGenerator, ReflectionRunnerTest::run,
-        SEQ_LEN);
+    driver = TestDriver.create(Target::new, SEQ_LEN);
   }
 
   @Test
   public void findsSimpleCounterexample() {
     assertThat(driver.search(10)).isNotEqualTo(Optional.empty());
-  }
-
-  private static TestOracle.Result run(Iterable<ReflectiveInput> inputs) {
-    return newRunner().runTest(inputs);
-  }
-
-  private static ReflectionRunner newRunner() {
-    return ReflectionRunner.create(new Target());
-  }
-
-  private static ReflectionGenerator newGenerator(Random rand) {
-    return ReflectionGenerator.create(Target.class, rand);
   }
 
   public static class Target {
