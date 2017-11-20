@@ -7,25 +7,15 @@ import java.util.Random;
 
 public class ProtobufGenerator {
   private final HashMap<Descriptor, Generator<DynamicMessage>> messageGenerators;
-  private final Generator<Long> longGenerator;
-  private final Generator<Double> doubleGenerator;
+  private final GenericGenerator genericGenerator;
 
-  private ProtobufGenerator() {
+  private ProtobufGenerator(GenericGenerator genericGenerator) {
     this.messageGenerators = new HashMap<>();
-    this.longGenerator = MemoizedGenerator.create(Random::nextLong);
-    this.doubleGenerator = MemoizedGenerator.create(Random::nextDouble);
+    this.genericGenerator = genericGenerator;
   }
 
-  static ProtobufGenerator create() {
-    return new ProtobufGenerator();
-  }
-
-  long nextLong(Random rand) {
-    return longGenerator.next(rand);
-  }
-
-  double nextDouble(Random rand) {
-    return doubleGenerator.next(rand);
+  static ProtobufGenerator create(GenericGenerator genericGenerator) {
+    return new ProtobufGenerator(genericGenerator);
   }
 
   DynamicMessage nextProto(Descriptor descriptor, Random rand) {
@@ -37,6 +27,7 @@ public class ProtobufGenerator {
   }
 
   private Generator<DynamicMessage> createMessageGenerator(Descriptor descriptor) {
-    return MemoizedGenerator.create(DynamicMessageGenerator.create(descriptor, this));
+    return MemoizedGenerator.create(DynamicMessageGenerator.create(descriptor, this,
+        genericGenerator));
   }
 }

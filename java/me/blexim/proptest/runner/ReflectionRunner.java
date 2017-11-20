@@ -1,15 +1,35 @@
 package me.blexim.proptest.runner;
 
-import com.google.common.collect.ImmutableList;
-import me.blexim.proptest.common.Action;
+import me.blexim.proptest.common.TestOracle;
 
-import java.lang.reflect.Method;
-import java.util.stream.Stream;
+import java.lang.reflect.InvocationTargetException;
 
-public class ReflectionRunner {
-  public <T> void findActions(Class<T> clazz) {
-    ImmutableList<Method> actionMethods = Stream.of(clazz.getMethods())
-        .filter(m -> m.getAnnotation(Action.class) != null)
-        .collect(ImmutableList.toImmutableList());
+public class ReflectionRunner implements TestOracle<ReflectiveInput> {
+  private final Object target;
+
+  private ReflectionRunner(Object target) {
+    this.target = target;
+  }
+
+  public static <T> ReflectionRunner create(T target) {
+    return new ReflectionRunner(target);
+  }
+
+  @Override
+  public Result runTest(Iterable<ReflectiveInput> inputs) {
+    for (ReflectiveInput input : inputs) {
+      try {
+        runAction(input);
+      } catch (Throwable t) {
+        return Result.FAIL;
+      }
+    }
+
+    return Result.PASS;
+  }
+
+  private void runAction(ReflectiveInput input)
+      throws IllegalAccessException, InvocationTargetException {
+    input.method().invoke(target, input.args().toArray());
   }
 }
