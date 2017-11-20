@@ -1,35 +1,49 @@
 package me.blexim.proptest.runner;
 
+import com.sun.org.apache.regexp.internal.REProgram;
 import me.blexim.proptest.common.Action;
-import me.blexim.proptest.common.TestOracle;
 import me.blexim.proptest.driver.TestDriver;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Optional;
-import java.util.Random;
+import java.util.function.Supplier;
 
 import static com.google.common.truth.Truth.assertThat;
 
 public class ReflectionRunnerTest {
   private static final int SEQ_LEN = 10;
 
-  private TestDriver<ReflectiveInput> driver;
-
-  @Before
-  public void setUp() {
-    driver = TestDriver.create(Target::new, SEQ_LEN);
+  @Test
+  public void findsSimpleCounterexample() {
+    testTarget(SimpleTarget::new);
   }
 
   @Test
-  public void findsSimpleCounterexample() {
-    assertThat(driver.search(10)).isNotEqualTo(Optional.empty());
+  public void findMoreComplexCounterexample() {
+    testTarget(IncreasingTarget::new);
   }
 
-  public static class Target {
+  private <T> void testTarget(Supplier<T> supplier) {
+    TestDriver<ReflectiveInput> driver = TestDriver.create(supplier, SEQ_LEN);
+    Optional<String> testCase = driver.search(10)
+        .map(inputs -> ReflectionPrinter.printTestCase(supplier, inputs));
+    assertThat(testCase).isNotEqualTo(Optional.empty());
+  }
+
+  public static class SimpleTarget {
     @Action
     public void action(int a) {
       assertThat(a % 2).isEqualTo(0);
+    }
+  }
+
+  public static class IncreasingTarget {
+    int last = Integer.MIN_VALUE;
+
+    @Action
+    public void shouldIncrease(int x) {
+      assertThat(x).isAtLeast(last);
+      last = x;
     }
   }
 }
