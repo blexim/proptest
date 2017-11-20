@@ -36,12 +36,14 @@ public class GenericGeneratorImpl implements GenericGenerator {
     if (Message.class.isAssignableFrom(clazz)) {
       return (Generator<T>) MessageGenerator.create((Class<? extends Message>) clazz,
           protobufGenerator, this);
-    } else if (clazz.isAssignableFrom(Long.class) || clazz == Long.TYPE) {
+    } else if (clazz.isAssignableFrom(Long.class) || clazz.isAssignableFrom(Long.TYPE)) {
       return r -> (T) Long.valueOf(r.nextLong());
-    } else if (clazz == Integer.TYPE) {
+    } else if (clazz.isAssignableFrom(Integer.class) || clazz.isAssignableFrom(Integer.TYPE)) {
       return r -> (T) Integer.valueOf(r.nextInt());
-    } else if (clazz.isAssignableFrom(Double.class) || clazz == Double.TYPE) {
+    } else if (clazz.isAssignableFrom(Double.class) || clazz.isAssignableFrom(Double.TYPE)) {
       return r -> (T) Double.valueOf(r.nextDouble());
+    } else if (clazz.isAssignableFrom(Float.class) || clazz.isAssignableFrom(Float.TYPE)) {
+      return r -> (T) Float.valueOf(r.nextFloat());
     } else if (clazz.isAssignableFrom(String.class)) {
       return r -> (T) randString(STRING_LEN, r);
     } else {
