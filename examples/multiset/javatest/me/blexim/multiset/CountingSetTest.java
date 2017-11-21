@@ -1,9 +1,7 @@
 package me.blexim.multiset;
 
-import com.google.common.collect.ImmutableList;
 import me.blexim.proptest.common.Action;
 import me.blexim.proptest.driver.ReflectiveTestDriver;
-import me.blexim.proptest.runner.ReflectiveInput;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
