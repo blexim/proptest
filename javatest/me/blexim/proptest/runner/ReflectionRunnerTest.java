@@ -1,8 +1,7 @@
 package me.blexim.proptest.runner;
 
-import com.sun.org.apache.regexp.internal.REProgram;
 import me.blexim.proptest.common.Action;
-import me.blexim.proptest.driver.TestDriver;
+import me.blexim.proptest.driver.ReflectiveTestDriver;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -24,7 +23,7 @@ public class ReflectionRunnerTest {
   }
 
   private <T> void testTarget(Supplier<T> supplier) {
-    TestDriver<ReflectiveInput> driver = TestDriver.create(supplier, SEQ_LEN);
+    ReflectiveTestDriver driver = ReflectiveTestDriver.create(supplier, SEQ_LEN);
     Optional<String> testCase = driver.search(10)
         .map(inputs -> ReflectionPrinter.printTestCase(supplier, inputs));
     assertThat(testCase).isNotEqualTo(Optional.empty());

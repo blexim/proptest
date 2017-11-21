@@ -1,20 +1,16 @@
 package me.blexim.proptest.driver;
 
 import com.google.common.collect.ImmutableList;
-import java.util.Optional;
-import java.util.Random;
-import java.util.function.Supplier;
-
 import me.blexim.proptest.common.InputGenerator;
 import me.blexim.proptest.common.InputGeneratorFactory;
 import me.blexim.proptest.common.TestOracle;
 import me.blexim.proptest.minimise.DeltaDebuggingMinimiser;
 import me.blexim.proptest.minimise.TestMinimiser;
-import me.blexim.proptest.runner.ReflectionGenerator;
-import me.blexim.proptest.runner.ReflectionRunner;
-import me.blexim.proptest.runner.ReflectiveInput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Optional;
+import java.util.Random;
 
 public class TestDriver<I> {
   private static final Logger logger = LoggerFactory.getLogger(TestDriver.class);
@@ -50,20 +46,7 @@ public class TestDriver<I> {
         DeltaDebuggingMinimiser.create(testOracle), new Random().nextLong());
   }
 
-  public static <T> TestDriver<ReflectiveInput> create(Supplier<T> supplier, int seqLenth,
-      long initialSeed) {
-    TestOracle<ReflectiveInput> oracle =
-        inputs -> ReflectionRunner.create(supplier.get()).runTest(inputs);
-    InputGeneratorFactory<ReflectiveInput> generatorFactory =
-        rand -> ReflectionGenerator.create(supplier.get().getClass(), rand);
-    return TestDriver.create(generatorFactory, oracle, seqLenth, initialSeed);
-  }
-
-  public static <T> TestDriver<ReflectiveInput> create(Supplier<T> supplier, int seqLenth) {
-    return create(supplier, seqLenth, new Random().nextLong());
-  }
-
-    public Optional<ImmutableList<I>> search(int numIterations) {
+  public Optional<ImmutableList<I>> search(int numIterations) {
     return findBadInput(numIterations)
         .map(minimiser::minimise);
   }

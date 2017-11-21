@@ -7,6 +7,7 @@ import me.blexim.proptest.generator.GenericGenerator;
 import me.blexim.proptest.generator.GenericGeneratorImpl;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Random;
 import java.util.stream.Stream;
 
