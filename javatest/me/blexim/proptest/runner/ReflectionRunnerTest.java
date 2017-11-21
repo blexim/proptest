@@ -24,9 +24,7 @@ public class ReflectionRunnerTest {
 
   private <T> void testTarget(Supplier<T> supplier) {
     ReflectiveTestDriver driver = ReflectiveTestDriver.create(supplier, SEQ_LEN);
-    Optional<String> testCase = driver.search(10)
-        .map(inputs -> ReflectionPrinter.printTestCase(supplier, inputs));
-    assertThat(testCase).isNotEqualTo(Optional.empty());
+    assertThat(driver.search(10)).isNotEqualTo(Optional.empty());
   }
 
   public static class SimpleTarget {

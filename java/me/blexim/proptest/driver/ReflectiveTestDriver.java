@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import me.blexim.proptest.common.InputGeneratorFactory;
 import me.blexim.proptest.common.TestOracle;
 import me.blexim.proptest.runner.ReflectionGenerator;
+import me.blexim.proptest.runner.ReflectionPrinter;
 import me.blexim.proptest.runner.ReflectionRunner;
 import me.blexim.proptest.runner.ReflectiveInput;
 import org.slf4j.Logger;
@@ -22,8 +23,9 @@ public class ReflectiveTestDriver {
     this.testDriver = testDriver;
   }
 
-  public Optional<ImmutableList<ReflectiveInput>> search(int numIterations) {
-    return testDriver.search(numIterations);
+  public Optional<String> search(int numIterations) {
+    return testDriver.search(numIterations)
+        .map(ReflectionPrinter::printTestCase);
   }
 
   public static <T> ReflectiveTestDriver create(Supplier<T> supplier, int seqLenth,

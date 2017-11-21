@@ -79,7 +79,7 @@ public class CountingSetTest {
     }
   }
 
-  private Optional<ImmutableList<ReflectiveInput>> search(Supplier<CountingSet> setSupplier) {
+  private Optional<String> search(Supplier<CountingSet> setSupplier) {
     return ReflectiveTestDriver.create(CountingSetChecker.wrap(setSupplier), TEST_LENGTH, SEED)
         .search(ITERS);
   }
