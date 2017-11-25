@@ -13,7 +13,9 @@ public class MessageGeneratorTest {
 
   @Before
   public void setUp() throws Exception {
-    generator = MessageGenerator.create(Foo.class);
+    GenericGenerator genericGenerator = GenericGeneratorImpl.create();
+    ProtobufGenerator protobufGenerator = ProtobufGenerator.create(genericGenerator);
+    generator = MessageGenerator.create(Foo.class, protobufGenerator, genericGenerator);
     rand = new Random();
   }
 

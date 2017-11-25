@@ -11,15 +11,18 @@ import java.util.Random;
 class DynamicMessageGenerator implements Generator<DynamicMessage> {
   private final Descriptor descriptor;
   private final ProtobufGenerator protobufGenerator;
+  private final GenericGenerator genericGenerator;
 
-  private DynamicMessageGenerator(Descriptor descriptor, ProtobufGenerator protobufGenerator) {
+  private DynamicMessageGenerator(Descriptor descriptor, ProtobufGenerator protobufGenerator,
+      GenericGenerator genericGenerator) {
     this.descriptor = descriptor;
     this.protobufGenerator = protobufGenerator;
+    this.genericGenerator = genericGenerator;
   }
 
   static DynamicMessageGenerator create(Descriptor descriptor,
-      ProtobufGenerator protobufGenerator) {
-    return new DynamicMessageGenerator(descriptor, protobufGenerator);
+      ProtobufGenerator protobufGenerator, GenericGenerator genericGenerator) {
+    return new DynamicMessageGenerator(descriptor, protobufGenerator, genericGenerator);
   }
 
   @Override
@@ -59,26 +62,26 @@ class DynamicMessageGenerator implements Generator<DynamicMessage> {
       case SINT32:
       case FIXED32:
       case SFIXED32:
-        return (int) protobufGenerator.nextLong(rand);
+        return genericGenerator.next(Integer.class, rand);
       case INT64:
       case UINT64:
       case SINT64:
       case FIXED64:
       case SFIXED64:
-        return protobufGenerator.nextLong(rand);
+        return genericGenerator.next(Long.class, rand);
       case DOUBLE:
-        return protobufGenerator.nextDouble(rand);
+        return genericGenerator.next(Double.class, rand);
       case FLOAT:
-        return (float) protobufGenerator.nextDouble(rand);
+        return genericGenerator.next(Float.class, rand);
       case MESSAGE:
         Descriptor messageType = fieldDescriptor.getMessageType();
         return protobufGenerator.nextProto(messageType, rand);
       case ENUM:
         return pick(fieldDescriptor.getEnumType().getValues(), rand);
       case STRING:
-        return randString(rand.nextInt(5), rand);
+        return genericGenerator.next(String.class, rand);
       case BYTES:
-        return ByteString.copyFromUtf8(randString(rand.nextInt(5), rand));
+        return ByteString.copyFromUtf8(genericGenerator.next(String.class, rand));
       default:
         return null;
     }
@@ -87,17 +90,5 @@ class DynamicMessageGenerator implements Generator<DynamicMessage> {
   private static <V> V pick(List<V> values, Random rand) {
     int idx = rand.nextInt(values.size());
     return values.get(idx);
-  }
-
-  private static final String CHARS = "abcdefgABCDEFG '#0123459";
-
-  private static String randString(int len, Random rand) {
-    StringBuilder builder = new StringBuilder(len);
-
-    for (int i = 0; i < len; i++) {
-      builder.append(CHARS.charAt(rand.nextInt(CHARS.length())));
-    }
-
-    return builder.toString();
   }
 }

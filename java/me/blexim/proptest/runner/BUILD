@@ -1,11 +1,11 @@
 java_library(
-    name = "generator",
+    name = "runner",
     srcs = glob(["*.java"]),
     visibility = ["//visibility:public"],
     deps = [
         "//java/me/blexim/proptest/common",
+        "//java/me/blexim/proptest/generator",
+        "//third_party/auto_value",
         "//third_party/guava",
-        "//third_party/protobuf",
-        "//third_party/slf4j",
     ],
 )
