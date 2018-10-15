@@ -1,5 +1,9 @@
 maven_jar(name = "auto_value_artifact",
-          artifact = "com.google.auto.value:auto-value:1.5.1",
+          artifact = "com.google.auto.value:auto-value:1.6.2",
+)
+
+maven_jar(name = "auto_value_annotations_artifact",
+          artifact = "com.google.auto.value:auto-value-annotations:1.6.2",
 )
 
 maven_jar(name = "guava_artifact",
